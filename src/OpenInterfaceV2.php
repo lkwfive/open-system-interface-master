@@ -55,20 +55,20 @@ class OpenInterfaceV2
     /**
      * 内网开放系统不支持post
      */
-    // public function post($method, $params, $local=false)
-    // {
-    //     $config = [
-    //         'v'         => '1.0',
-    //         'username'  => $this->user,
-    //         'method'    => $method,
-    //     ];
-    //     $params = array_merge($config, $params);
-    //     $sign = $this->createSign($params);
-    //     $params['sign'] = $sign;
-    //     $url = $local ? $this->url_local : $this->url;
-    //     $url = $url.http_build_query($params);
-    //     return $this->curlPost($url, $params);
-    // }
+    public function post($method, $v='1.0', $params=[])
+    {
+        $config = [
+            'method' => $method,
+            'v' => $v,
+            'format' => 'json',
+            'app_key' => $this->user_code,
+            'protocol' => 'param3',
+        ];
+        $params = array_merge($config, $params);
+        $sign = $this->createSign($params);
+        $url = $this->server.http_build_query(['sign'=>$sign]);
+        return $this->curlPost($url, $params);
+    }
 
     public function get($method, $v='1.0', $params=[])
     {
